@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 public class Movement : MonoBehaviour {
+    public Main main;
     public Cube cube = new Cube(Vector2.zero, Vector2.zero, Vector3.zero, Orientation.VERTICAL);
     public int speed = 300;
     public bool isMoving = false;
@@ -44,6 +45,8 @@ public class Movement : MonoBehaviour {
         updateCubeInfo(direction);
 
         isMoving = false;
+
+        main.checkCubePositionOnBoard();
     }
 
     void updateCubeInfo(Vector3 direction) {
@@ -74,7 +77,7 @@ public class Movement : MonoBehaviour {
                 cube.point1 = new Vector2((direction == Vector3.right ? cube.point2.x : cube.point1.x) + direction.x, cube.point1.y);
                 cube.point2 = cube.point1;
             } else {
-                cube.point1 = new Vector2(cube.point1.x, (direction == Vector3.forward ? cube.point2.y : cube.point1.y) + direction.z);
+                cube.point1 = new Vector2(cube.point1.x, (direction == Vector3.forward ? cube.point1.y : cube.point2.y) + direction.z);
                 cube.point2 = cube.point1;
             }
         } else if (cube.isHorizontalY() && isHorizontalMovement) {
@@ -86,6 +89,13 @@ public class Movement : MonoBehaviour {
             cube.point1 = new Vector2(cube.point1.x, cube.point1.y + direction.z);
             cube.point2 = new Vector2(cube.point2.x, cube.point2.y + direction.z);
         }
+    }
+
+    public void resetCube() {
+        cube.point1 = Vector2.zero;
+        cube.point2 = Vector2.zero;
+        cube.direction = Vector3.zero;
+        cube.orientation = Orientation.VERTICAL;
     }
 
     public class Cube {
