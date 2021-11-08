@@ -12,7 +12,7 @@ public class Main : MonoBehaviour {
     public GameObject unstableHorizontalBlock;
     public GameObject unstableVerticalBlock;
     public AllLevels allLevels;
-    int level = 4;
+    int level = 1;
     bool isRendering = false;
 
     void Start() {
@@ -22,9 +22,7 @@ public class Main : MonoBehaviour {
     void renderLevel() {
         isRendering = true;
 
-        movement.resetCube();
-
-        cube.transform.position = new Vector3(0.5f, 1, 0.5f);
+        resetCubePosition();
 
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Board")) {
             Destroy(obj);
@@ -64,6 +62,11 @@ public class Main : MonoBehaviour {
         }
 
         isRendering = false;
+    }
+
+    void resetCubePosition() {
+        movement.resetCube();
+        cube.transform.position = new Vector3(0.5f, 1, 0.5f);
     }
 
     public void checkCubePositionOnBoard() {
@@ -110,15 +113,67 @@ public class Main : MonoBehaviour {
         }
 
         if (!isOnBoard) {
-            onLevelLose();
+            Vector3 push = determinePushDirection(firstPointOnBoard, secondPointOnBoard, firstPointBlock, secondPointBlock);
+            onLevelLose(push);
         }
     }
 
     void onLevelLose() {
+        onLevelLose(Vector3.zero);
+    }
+
+    void onLevelLose(Vector3 direction) {
         movement.isMoving = true;
-        cube.GetComponent<ConstantForce>().force = movement.cube.direction * 100;
-        cube.GetComponent<Rigidbody>().useGravity = true;
+        StartCoroutine(flipCube(direction));
         Debug.Log("LOSE!");
+    }
+
+    IEnumerator flipCube(Vector3 direction) {
+        if (!movement.cube.isVertical() && !direction.Equals(Vector3.zero)) {
+            Vector3 rotationCenter = cube.transform.position + Vector3.down / (movement.cube.isVertical() ? 1 : 2);
+            Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
+
+            float remainingAngle = 90;
+            while (remainingAngle > 0) {
+                float rotationAngle = Mathf.Min(Time.deltaTime * 300, remainingAngle);
+                cube.transform.RotateAround(rotationCenter, rotationAxis, rotationAngle);
+                remainingAngle -= rotationAngle;
+                yield return new WaitForSeconds(0.01f);
+            }
+        }
+
+        cube.GetComponent<Rigidbody>().useGravity = true;
+    }
+
+    Vector3 determinePushDirection(bool firstPointOnBoard, bool secondPointOnBoard, Block firstPointBlock, Block secondPointBlock) {
+        Block block = null;
+        Vector3 pushDirection = Vector3.zero;
+        if (movement.cube.isHorizontalY()) {
+            if (!firstPointOnBoard && secondPointOnBoard) {
+                block = new Block(secondPointBlock.x, secondPointBlock.y + 2);
+                pushDirection = Vector3.forward;
+            } else if (firstPointOnBoard && !secondPointOnBoard) {
+                block = new Block(firstPointBlock.x, firstPointBlock.y - 2);
+                pushDirection = Vector3.back;
+            }
+        } else if (movement.cube.isHorizontalX()) {
+            if (!firstPointOnBoard && secondPointOnBoard) {
+                block = new Block(secondPointBlock.x - 2, secondPointBlock.y);
+                pushDirection = Vector3.left;
+            } else if (firstPointOnBoard && !secondPointOnBoard) {
+                block = new Block(firstPointBlock.x + 2, firstPointBlock.y);
+                pushDirection = Vector3.right;
+            }
+        }
+
+        if (block != null) {
+            GameObject gameObject = GameObject.Find(block.getName());
+            if (gameObject != null) {
+                gameObject.GetComponent<BoxCollider>().enabled = false;
+            }
+        }
+
+        return pushDirection;
     }
 
     void onLevelWin() {
