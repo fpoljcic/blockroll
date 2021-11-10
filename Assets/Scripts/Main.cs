@@ -11,6 +11,7 @@ public class Main : MonoBehaviour {
     public GameObject disappieringBlock;
     public GameObject unstableHorizontalBlock;
     public GameObject unstableVerticalBlock;
+    public GameObject removedColliderBlock;
     public AllLevels allLevels;
     int level = 1;
     bool isRendering = false;
@@ -66,6 +67,9 @@ public class Main : MonoBehaviour {
 
     void resetCubePosition() {
         movement.resetCube();
+        cube.GetComponent<Rigidbody>().useGravity = false;
+        cube.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        cube.transform.rotation = Quaternion.identity;
         cube.transform.position = new Vector3(0.5f, 1, 0.5f);
     }
 
@@ -91,20 +95,21 @@ public class Main : MonoBehaviour {
                 isOnBoard = true;
 
                 if (firstPointBlock.type == BlockType.END && movement.cube.isVertical()) {
-                    onLevelWin();
+                    GameObject.Find(firstPointBlock.getName()).GetComponent<BoxCollider>().enabled = false;
+                    StartCoroutine(onLevelWin());
                     return;
                 }
 
                 if (firstPointBlock.type == BlockType.UNSTABLE_VERTICAL && movement.cube.isVertical()) {
                     GameObject.Find(firstPointBlock.getName()).GetComponent<BoxCollider>().enabled = false;
-                    onLevelLose();
+                    StartCoroutine(onLevelLose());
                     return;
                 }
 
                 if (movement.cube.isHorizontal() && (firstPointBlock.type == BlockType.UNSTABLE_HORIZONTAL || secondPointBlock.type == BlockType.UNSTABLE_HORIZONTAL)) {
                     GameObject.Find(firstPointBlock.getName()).GetComponent<BoxCollider>().enabled = false;
                     GameObject.Find(secondPointBlock.getName()).GetComponent<BoxCollider>().enabled = false;
-                    onLevelLose();
+                    StartCoroutine(onLevelLose());
                     return;
                 }
 
@@ -114,35 +119,41 @@ public class Main : MonoBehaviour {
 
         if (!isOnBoard) {
             Vector3 push = determinePushDirection(firstPointOnBoard, secondPointOnBoard, firstPointBlock, secondPointBlock);
-            onLevelLose(push);
+            StartCoroutine(onLevelLose(push));
         }
     }
 
-    void onLevelLose() {
-        onLevelLose(Vector3.zero);
+    IEnumerator onLevelLose() {
+        return onLevelLose(Vector3.zero);
     }
 
-    void onLevelLose(Vector3 direction) {
+    IEnumerator onLevelLose(Vector3 direction) {
         movement.isMoving = true;
-        StartCoroutine(flipCube(direction));
-        Debug.Log("LOSE!");
-    }
 
-    IEnumerator flipCube(Vector3 direction) {
         if (!movement.cube.isVertical() && !direction.Equals(Vector3.zero)) {
             Vector3 rotationCenter = cube.transform.position + Vector3.down / (movement.cube.isVertical() ? 1 : 2);
             Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
 
             float remainingAngle = 90;
             while (remainingAngle > 0) {
-                float rotationAngle = Mathf.Min(Time.deltaTime * 300, remainingAngle);
+                float rotationAngle = Mathf.Min(Time.deltaTime * 800, remainingAngle);
                 cube.transform.RotateAround(rotationCenter, rotationAxis, rotationAngle);
                 remainingAngle -= rotationAngle;
                 yield return new WaitForSeconds(0.01f);
             }
         }
-
+        
         cube.GetComponent<Rigidbody>().useGravity = true;
+
+        yield return new WaitForSeconds(3f);
+
+        if (removedColliderBlock != null) {
+            removedColliderBlock.GetComponent<BoxCollider>().enabled = true;
+            removedColliderBlock = null;
+        }
+
+        resetCubePosition();
+        movement.isMoving = false;
     }
 
     Vector3 determinePushDirection(bool firstPointOnBoard, bool secondPointOnBoard, Block firstPointBlock, Block secondPointBlock) {
@@ -170,15 +181,19 @@ public class Main : MonoBehaviour {
             GameObject gameObject = GameObject.Find(block.getName());
             if (gameObject != null) {
                 gameObject.GetComponent<BoxCollider>().enabled = false;
+                removedColliderBlock = gameObject;
             }
         }
 
         return pushDirection;
     }
 
-    void onLevelWin() {
+    IEnumerator onLevelWin() {
+        movement.isMoving = true;
+        cube.GetComponent<Rigidbody>().useGravity = true;
+        yield return new WaitForSeconds(3f);
         level++;
         renderLevel();
-        Debug.Log("WIN!");
+        movement.isMoving = false;
     }
 }
