@@ -4,6 +4,7 @@ using static AllLevels;
 
 public class Main : MonoBehaviour {
     public Movement movement;
+    public GameProgress gameProgress;
     public GameObject cube;
     public GameObject startBlock;
     public GameObject standardBlock;
@@ -13,10 +14,16 @@ public class Main : MonoBehaviour {
     public GameObject unstableVerticalBlock;
     public GameObject removedColliderBlock;
     public AllLevels allLevels;
-    int level = 1;
+    public CameraPosition cameraPosition;
+    public int level;
+    // float scroll;
+    // int zoomSpeed = 20;
     bool isRendering = false;
 
     void Start() {
+        // scroll = Input.GetAxis("Mouse ScrollWheel");
+        // Camera.main.fieldOfView += scroll * zoomSpeed;
+        level = gameProgress.LoadGame();
         renderLevel();
     }
 
@@ -193,6 +200,7 @@ public class Main : MonoBehaviour {
         cube.GetComponent<Rigidbody>().useGravity = true;
         yield return new WaitForSeconds(3f);
         level++;
+        gameProgress.SaveGame(level);
         renderLevel();
         movement.isMoving = false;
     }

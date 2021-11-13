@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -227,6 +227,8 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194229}
+  - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -299,6 +301,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 47.264, y: 0, z: 0}
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ee8f0f2f67068c489189ba230484852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &963194230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90d016b7a64404e4886999eb0f650e77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1759660659
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,6 +356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {fileID: 1839313767}
+  gameProgress: {fileID: 963194229}
   cube: {fileID: 1839313766}
   startBlock: {fileID: 6758408883638047189}
   standardBlock: {fileID: 6390255857191720666, guid: 69fc65d320cd1494e9c9ab5a4e57cf68, type: 3}
@@ -337,7 +364,9 @@ MonoBehaviour:
   disappieringBlock: {fileID: 0}
   unstableHorizontalBlock: {fileID: 6487797373940593817}
   unstableVerticalBlock: {fileID: 378741799247332488}
+  removedColliderBlock: {fileID: 0}
   allLevels: {fileID: 1759660662}
+  level: 0
 --- !u!4 &1759660661
 Transform:
   m_ObjectHideFlags: 0
