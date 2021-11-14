@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -361,12 +361,11 @@ MonoBehaviour:
   startBlock: {fileID: 6758408883638047189}
   standardBlock: {fileID: 6390255857191720666, guid: 69fc65d320cd1494e9c9ab5a4e57cf68, type: 3}
   endBlock: {fileID: 7374330433433721326, guid: 82403772e8ea8c246860d7b0f2b79bb3, type: 3}
-  disappieringBlock: {fileID: 0}
+  disappieringBlock: {fileID: 3755769391726740050, guid: a79edb817d5fe8d458ff54a6f87be82f, type: 3}
   unstableHorizontalBlock: {fileID: 6487797373940593817}
   unstableVerticalBlock: {fileID: 378741799247332488}
-  removedColliderBlock: {fileID: 0}
   allLevels: {fileID: 1759660662}
-  level: 0
+  cameraPosition: {fileID: 0}
 --- !u!4 &1759660661
 Transform:
   m_ObjectHideFlags: 0
@@ -576,6 +575,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UnstableVerticalBlock
       objectReference: {fileID: 0}
+    - target: {fileID: 3919878042595643586, guid: 1488e249ea71a174da7c96c08d291d60, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 7113224816321580211, guid: 1488e249ea71a174da7c96c08d291d60, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -642,6 +645,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EndBlock
       objectReference: {fileID: 0}
+    - target: {fileID: 7374330433433721326, guid: 82403772e8ea8c246860d7b0f2b79bb3, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82403772e8ea8c246860d7b0f2b79bb3, type: 3}
 --- !u!1001 &3628835647823463930
@@ -658,6 +665,10 @@ PrefabInstance:
     - target: {fileID: 3755769391726740050, guid: a79edb817d5fe8d458ff54a6f87be82f, type: 3}
       propertyPath: m_Name
       value: DisappearingBlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755769391726740050, guid: a79edb817d5fe8d458ff54a6f87be82f, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 8769570955298252866, guid: a79edb817d5fe8d458ff54a6f87be82f, type: 3}
       propertyPath: m_RootOrder
@@ -716,6 +727,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StandardBlock
       objectReference: {fileID: 0}
+    - target: {fileID: 6390255857191720666, guid: 69fc65d320cd1494e9c9ab5a4e57cf68, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 6390255857191720670, guid: 69fc65d320cd1494e9c9ab5a4e57cf68, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -772,6 +787,10 @@ PrefabInstance:
     - target: {fileID: 6232379874884274807, guid: 8872828d898ffe04db28ceb05178479d, type: 3}
       propertyPath: m_Name
       value: UnstableHorizontalBlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 6232379874884274807, guid: 8872828d898ffe04db28ceb05178479d, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 8100063436669433293, guid: 8872828d898ffe04db28ceb05178479d, type: 3}
       propertyPath: m_RootOrder
@@ -843,6 +862,10 @@ PrefabInstance:
     - target: {fileID: 4376579472421084970, guid: ea1a9527097e9064c94a393747ad9083, type: 3}
       propertyPath: m_Name
       value: StartBlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376579472421084970, guid: ea1a9527097e9064c94a393747ad9083, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 4376579472421084971, guid: ea1a9527097e9064c94a393747ad9083, type: 3}
       propertyPath: m_Enabled

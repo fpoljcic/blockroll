@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static AllLevels;
 
@@ -12,23 +13,27 @@ public class Main : MonoBehaviour {
     public GameObject disappieringBlock;
     public GameObject unstableHorizontalBlock;
     public GameObject unstableVerticalBlock;
-    public GameObject removedColliderBlock;
     public AllLevels allLevels;
     public CameraPosition cameraPosition;
-    public int level;
+    public Block[] level;
     // float scroll;
     // int zoomSpeed = 20;
     bool isRendering = false;
+    GameObject removedColliderBlock;
+    int? prevFirstPointBlockIndex;
+    int? prevSecondPointBlockIndex;
+    List<Block> disappearedBlocks = new List<Block>();
 
     void Start() {
         // scroll = Input.GetAxis("Mouse ScrollWheel");
         // Camera.main.fieldOfView += scroll * zoomSpeed;
-        level = gameProgress.LoadGame();
         renderLevel();
     }
 
     void renderLevel() {
         isRendering = true;
+
+        level = allLevels.levels[gameProgress.getLevel() - 1];
 
         resetCubePosition();
 
@@ -36,7 +41,7 @@ public class Main : MonoBehaviour {
             Destroy(obj);
         }
 
-        foreach (Block block in allLevels.levels[level - 1]) {
+        foreach (Block block in level) {
             GameObject blockToRender;
 
             switch (block.type) {
@@ -52,7 +57,7 @@ public class Main : MonoBehaviour {
                 case BlockType.UNSTABLE_VERTICAL:
                     blockToRender = unstableVerticalBlock;
                     break;
-                case BlockType.DISAPPIERING:
+                case BlockType.DISAPPEARING:
                     blockToRender = disappieringBlock;
                     break;
                 case BlockType.END:
@@ -67,6 +72,10 @@ public class Main : MonoBehaviour {
 
             instantiatedBlock.name = block.getName();
             instantiatedBlock.tag = "Board";
+
+            if (block.type == BlockType.DISAPPEARING) {
+                instantiatedBlock.AddComponent<Rigidbody>().useGravity = false;
+            }
         }
 
         isRendering = false;
@@ -80,6 +89,27 @@ public class Main : MonoBehaviour {
         cube.transform.position = new Vector3(0.5f, 1, 0.5f);
     }
 
+    void resetRemovedCubes() {
+        int j = 0;
+
+        for (int i = 0; i < level.Length; i++) {
+            if (level[i] == null) {
+                Block block = disappearedBlocks[j++];
+                level[i] = block;
+
+                GameObject blockGameObject = GameObject.Find(block.getName());
+                blockGameObject.GetComponent<Rigidbody>().useGravity = false;
+                blockGameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                blockGameObject.transform.rotation = Quaternion.identity;
+                blockGameObject.transform.position = new Vector3(block.x + 0.5f, -0.05f, block.y + 0.5f);
+            }
+        }
+
+        prevFirstPointBlockIndex = null;
+        prevSecondPointBlockIndex = null;
+        disappearedBlocks.Clear();
+    }
+
     public void checkCubePositionOnBoard() {
         bool isOnBoard = false;
         bool firstPointOnBoard = false;
@@ -87,15 +117,35 @@ public class Main : MonoBehaviour {
         Block firstPointBlock = null;
         Block secondPointBlock = null;
 
-        foreach (Block block in allLevels.levels[level - 1]) {
+        if (prevFirstPointBlockIndex != null && level[(int)prevFirstPointBlockIndex].type == BlockType.DISAPPEARING) {
+            GameObject.Find(level[(int)prevFirstPointBlockIndex].getName()).GetComponent<Rigidbody>().useGravity = true;
+            disappearedBlocks.Add(level[(int)prevFirstPointBlockIndex]);
+            level[(int)prevFirstPointBlockIndex] = null;
+        }
+
+        if (prevSecondPointBlockIndex != null && prevFirstPointBlockIndex != prevSecondPointBlockIndex && level[(int)prevSecondPointBlockIndex].type == BlockType.DISAPPEARING) {
+            GameObject.Find(level[(int)prevSecondPointBlockIndex].getName()).GetComponent<Rigidbody>().useGravity = true;
+            disappearedBlocks.Add(level[(int)prevSecondPointBlockIndex]);
+            level[(int)prevSecondPointBlockIndex] = null;
+        }
+
+        for (int i = 0; i < level.Length; i++) {
+            Block block = level[i];
+
+            if (block == null) {
+                continue;
+            }
+
             if (block.x == movement.cube.point1.x && block.y == movement.cube.point1.y) {
                 firstPointOnBoard = true;
                 firstPointBlock = block;
+                prevFirstPointBlockIndex = i;
             }
 
             if (block.x == movement.cube.point2.x && block.y == movement.cube.point2.y) {
                 secondPointOnBoard = true;
                 secondPointBlock = block;
+                prevSecondPointBlockIndex = i;
             }
 
             if (firstPointOnBoard && secondPointOnBoard) {
@@ -160,6 +210,7 @@ public class Main : MonoBehaviour {
         }
 
         resetCubePosition();
+        resetRemovedCubes();
         movement.isMoving = false;
     }
 
@@ -199,8 +250,9 @@ public class Main : MonoBehaviour {
         movement.isMoving = true;
         cube.GetComponent<Rigidbody>().useGravity = true;
         yield return new WaitForSeconds(3f);
-        level++;
-        gameProgress.SaveGame(level);
+        gameProgress.advanceLevel();
+        prevFirstPointBlockIndex = null;
+        prevSecondPointBlockIndex = null;
         renderLevel();
         movement.isMoving = false;
     }
