@@ -30,8 +30,24 @@ public class Main : MonoBehaviour {
         renderLevel();
     }
 
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.R)) {
+            gameProgress.resetGame();
+            renderLevel();
+        } else if (Input.GetKeyDown(KeyCode.D)) {
+            gameProgress.advanceLevel();
+            renderLevel();
+        } else if (Input.GetKeyDown(KeyCode.A)) {
+            gameProgress.previousLevel();
+            renderLevel();
+        }
+    }
+
     void renderLevel() {
         isRendering = true;
+
+        prevFirstPointBlockIndex = null;
+        prevSecondPointBlockIndex = null;
 
         level = allLevels.levels[gameProgress.getLevel() - 1];
 
@@ -77,6 +93,8 @@ public class Main : MonoBehaviour {
                 instantiatedBlock.AddComponent<Rigidbody>().useGravity = false;
             }
         }
+
+        cameraPosition.UpdateCameraPosition(level);
 
         isRendering = false;
     }
@@ -251,8 +269,6 @@ public class Main : MonoBehaviour {
         cube.GetComponent<Rigidbody>().useGravity = true;
         yield return new WaitForSeconds(3f);
         gameProgress.advanceLevel();
-        prevFirstPointBlockIndex = null;
-        prevSecondPointBlockIndex = null;
         renderLevel();
         movement.isMoving = false;
     }
