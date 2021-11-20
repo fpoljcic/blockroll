@@ -24,6 +24,7 @@ public class Main : MonoBehaviour {
     int? prevSecondPointBlockIndex;
     List<Block> disappearedBlocks = new List<Block>();
 
+
     void Start() {
         // scroll = Input.GetAxis("Mouse ScrollWheel");
         // Camera.main.fieldOfView += scroll * zoomSpeed;

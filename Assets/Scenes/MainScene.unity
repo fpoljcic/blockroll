@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -406,6 +406,7 @@ GameObject:
   - component: {fileID: 1839313768}
   - component: {fileID: 1839313767}
   - component: {fileID: 1839313772}
+  - component: {fileID: 1839313773}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -460,7 +461,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 090a0706d3948f343b4f1d3202c71577, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -520,6 +521,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1839313773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839313766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89e756e02758e8146a975db4fa981031, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textures:
+  - {fileID: 2800000, guid: f429b298476a1954fb9547059d5b158d, type: 3}
+  - {fileID: 2800000, guid: 6f4e5f1a27b30b748ac2a59f333dba3e, type: 3}
+  - {fileID: 2800000, guid: 29f2cfac0f9efc540bb7fee45a1ae4d3, type: 3}
+  - {fileID: 2800000, guid: ce16ea038c798e149bcfd1d8d2820f2f, type: 3}
+  cube: {fileID: 1839313769}
 --- !u!1001 &378741799247332487
 PrefabInstance:
   m_ObjectHideFlags: 0
