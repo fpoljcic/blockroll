@@ -660,6 +660,7 @@ public class AllLevels : MonoBehaviour {
         }, new Block[] { // Level 12
             new Block(0, 0, BlockType.START),
             new Block(-9, -5, BlockType.END),
+            new Block(-5, 6),
             new Block(-4, 6),
             new Block(-3, 6),
             new Block(-2, 6),
@@ -674,6 +675,7 @@ public class AllLevels : MonoBehaviour {
             new Block(-8, 5),
             new Block(-7, 5),
             new Block(-6, 5),
+            new Block(-5, 5),
             new Block(-4, 5),
             new Block(-3, 5),
             new Block(0, 5),

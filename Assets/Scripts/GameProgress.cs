@@ -3,13 +3,15 @@ using UnityEngine;
 public class GameProgress : MonoBehaviour {
 
     public void advanceLevel() {
-        PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level") + 1);
-        PlayerPrefs.Save();
-        Debug.Log("Level " + getLevel() + " set");
+        setLevel(PlayerPrefs.GetInt("Level") + 1);
     }
 
     public void previousLevel() {
-        PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level") - 1);
+        setLevel(PlayerPrefs.GetInt("Level") - 1);
+    }
+
+    public void setLevel(int level) {
+        PlayerPrefs.SetInt("Level", level);
         PlayerPrefs.Save();
         Debug.Log("Level " + getLevel() + " set");
     }
