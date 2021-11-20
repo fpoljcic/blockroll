@@ -33,6 +33,12 @@ public class CameraPosition : MonoBehaviour {
         float y = 0.28867513459f * distanceZ;
         float z = 0.07735026918f * distanceZ;
 
+        float distanceX = Mathf.Abs(maxX + 1 - (minX - 1));
+        if (distanceX > distanceZ) {
+            y = 0.28867513459f * distanceX;
+            z = 0.08735026918f * distanceX;
+        }
+
         Camera.main.transform.position = new Vector3((float) (minX + maxX) / 2, y, minZ - z);
 
         //Debug.Log("Camera set to x=" + Camera.main.transform.position.x + ", y=" + Camera.main.transform.position.y + ", z=" + Camera.main.transform.position.z);
