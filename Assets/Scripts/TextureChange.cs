@@ -5,10 +5,6 @@ public class TextureChange : MonoBehaviour {
     public Texture[] textures;
     public Renderer cube;
 
-
-    private void Start() {
-    }
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) {

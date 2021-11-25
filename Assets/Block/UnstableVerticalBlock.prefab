@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8133666783994586324}
   - component: {fileID: 8971555447971377872}
   m_Layer: 0
-  m_Name: UnstableOneBlock
+  m_Name: UnstableVerticalBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a2f9715180aa444408f9eaf72d7a1a86, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

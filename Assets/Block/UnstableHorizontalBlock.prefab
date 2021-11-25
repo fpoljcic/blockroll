@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7113224816321580211}
   - component: {fileID: 8763236752059812800}
   m_Layer: 0
-  m_Name: UnstableTwoBlock
+  m_Name: UnstableHorizontalBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9ed8664a241e0de4f90c7d960f61da17, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AllLevels : MonoBehaviour {
@@ -1186,6 +1187,15 @@ public class AllLevels : MonoBehaviour {
             new Block(6, -7),
             new Block(7, -7),
         }
+    };
+
+    public Dictionary<int, Vector3> cameraOverrides = new Dictionary<int, Vector3> {
+        { 10, new Vector3(8.93f, 8.81f, -13.45f) },
+        { 11, new Vector3(13.39f, 0, 0) },
+        { 12, new Vector3(-5.7f, 9.07f, -12.57f) },
+        { 13, new Vector3(5.21f, 9.72f, -7.31f) },
+        { 14, new Vector3(11.66f, 8.27f, -12.08f) },
+        { 15, new Vector3(0.51f, 8.54f, -10.46f) }
     };
 
     public class Block {

@@ -30,4 +30,19 @@ public class GameProgress : MonoBehaviour {
         PlayerPrefs.DeleteAll();
         Debug.Log("Data reset complete");
     }
+
+    public int getCubeTexture() {
+        if (PlayerPrefs.HasKey("CubeTexture")) {
+            return PlayerPrefs.GetInt("CubeTexture");
+        } else {
+            PlayerPrefs.SetInt("CubeTexture", 1);
+            PlayerPrefs.Save();
+            return 1;
+        }
+    }
+
+    public void changeCubeTexture(int texture) {
+        PlayerPrefs.SetInt("CubeTexture", texture);
+        PlayerPrefs.Save();
+    }
 }

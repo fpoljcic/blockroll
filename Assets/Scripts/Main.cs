@@ -95,7 +95,12 @@ public class Main : MonoBehaviour {
             }
         }
 
-        cameraPosition.UpdateCameraPosition(level);
+        Vector3 cameraOverride = Vector3.zero;
+        if (allLevels.cameraOverrides.ContainsKey(gameProgress.getLevel())) {
+            cameraOverride = allLevels.cameraOverrides[gameProgress.getLevel()];
+        }
+
+        cameraPosition.UpdateCameraPosition(level, cameraOverride);
 
         isRendering = false;
     }
