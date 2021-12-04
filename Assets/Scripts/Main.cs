@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static AllLevels;
 
 public class Main : MonoBehaviour {
@@ -15,6 +17,7 @@ public class Main : MonoBehaviour {
     public GameObject unstableVerticalBlock;
     public AllLevels allLevels;
     public CameraPosition cameraPosition;
+    public TextMeshProUGUI levelText;
     public Block[] level;
     // float scroll;
     // int zoomSpeed = 20;
@@ -33,13 +36,13 @@ public class Main : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.R)) {
-            gameProgress.resetGame();
+            gameProgress.ResetGame();
             renderLevel();
         } else if (Input.GetKeyDown(KeyCode.D)) {
-            gameProgress.advanceLevel();
+            gameProgress.AdvanceLevel();
             renderLevel();
         } else if (Input.GetKeyDown(KeyCode.A)) {
-            gameProgress.previousLevel();
+            gameProgress.PreviousLevel();
             renderLevel();
         }
     }
@@ -50,9 +53,9 @@ public class Main : MonoBehaviour {
         prevFirstPointBlockIndex = null;
         prevSecondPointBlockIndex = null;
 
-        level = allLevels.levels[gameProgress.getLevel() - 1];
+        level = allLevels.levels[gameProgress.GetLevel() - 1];
 
-        resetCubePosition();
+        resetLevel();
 
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Board")) {
             Destroy(obj);
@@ -95,9 +98,11 @@ public class Main : MonoBehaviour {
             }
         }
 
+        levelText.text = "LEVEL " + gameProgress.GetLevel().ToString();
+
         Vector3 cameraOverride = Vector3.zero;
-        if (allLevels.cameraOverrides.ContainsKey(gameProgress.getLevel())) {
-            cameraOverride = allLevels.cameraOverrides[gameProgress.getLevel()];
+        if (allLevels.cameraOverrides.ContainsKey(gameProgress.GetLevel())) {
+            cameraOverride = allLevels.cameraOverrides[gameProgress.GetLevel()];
         }
 
         cameraPosition.UpdateCameraPosition(level, cameraOverride);
@@ -120,7 +125,7 @@ public class Main : MonoBehaviour {
             if (level[i] == null) {
                 Block block = disappearedBlocks[j++];
                 level[i] = block;
-
+                
                 GameObject blockGameObject = GameObject.Find(block.getName());
                 blockGameObject.GetComponent<Rigidbody>().useGravity = false;
                 blockGameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -132,6 +137,16 @@ public class Main : MonoBehaviour {
         prevFirstPointBlockIndex = null;
         prevSecondPointBlockIndex = null;
         disappearedBlocks.Clear();
+    }
+
+    public void resetLevel() {
+        if (removedColliderBlock != null) {
+            removedColliderBlock.GetComponent<BoxCollider>().enabled = true;
+            removedColliderBlock = null;
+        }
+
+        resetCubePosition();
+        resetRemovedCubes();
     }
 
     public void checkCubePositionOnBoard() {
@@ -217,7 +232,7 @@ public class Main : MonoBehaviour {
 
             float remainingAngle = 90;
             while (remainingAngle > 0) {
-                float rotationAngle = Mathf.Min(Time.deltaTime * 800, remainingAngle);
+                float rotationAngle = Mathf.Min(2.4f, remainingAngle);
                 cube.transform.RotateAround(rotationCenter, rotationAxis, rotationAngle);
                 remainingAngle -= rotationAngle;
                 yield return new WaitForSeconds(0.01f);
@@ -228,13 +243,7 @@ public class Main : MonoBehaviour {
 
         yield return new WaitForSeconds(3f);
 
-        if (removedColliderBlock != null) {
-            removedColliderBlock.GetComponent<BoxCollider>().enabled = true;
-            removedColliderBlock = null;
-        }
-
-        resetCubePosition();
-        resetRemovedCubes();
+        resetLevel();
         movement.isMoving = false;
     }
 
@@ -274,8 +283,13 @@ public class Main : MonoBehaviour {
         movement.isMoving = true;
         cube.GetComponent<Rigidbody>().useGravity = true;
         yield return new WaitForSeconds(3f);
-        gameProgress.advanceLevel();
+        gameProgress.AdvanceLevel();
         renderLevel();
         movement.isMoving = false;
+    }
+
+    public void exitClick() {
+        Menu.fromLevel = true;
+        SceneManager.LoadScene("Menu");
     }
 }
