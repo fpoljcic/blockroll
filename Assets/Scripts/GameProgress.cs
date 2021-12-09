@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GameProgress : MonoBehaviour {
@@ -46,6 +47,15 @@ public class GameProgress : MonoBehaviour {
 
     public void ChangeCubeTexture(int texture) {
         PlayerPrefs.SetInt("CubeTexture", texture);
+        PlayerPrefs.Save();
+    }
+    
+    public int GetWorldTexture() {
+        return PlayerPrefs.GetInt("WorldTexture", 1);
+    }
+
+    public void ChangeWorldTexture(int texture) {
+        PlayerPrefs.SetInt("WorldTexture", texture);
         PlayerPrefs.Save();
     }
 

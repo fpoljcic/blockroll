@@ -9,6 +9,7 @@ public class Menu : MonoBehaviour {
     public static bool fromLevel = false;
     public GameObject levelsContainer;
     public GameObject optionsCube;
+    public GameObject sphereObject;
     public GameProgress gameProgress;
     public AudioMixer audioMixer;
     public Slider slider;
@@ -17,9 +18,11 @@ public class Menu : MonoBehaviour {
     public Toggle fullscreenToggle;
     Resolution[] resolutions;
     public Texture[] textures;
+    public Texture[] worldTextures;
     public GameObject mainMenu;
     public GameObject levelsMenu;
     public Renderer cube;
+    public Renderer sphere;
 
     void Start() {
         if (fromLevel) {
@@ -44,7 +47,8 @@ public class Menu : MonoBehaviour {
     }
 
     void Update() {
-        optionsCube.transform.Rotate(Vector3.up * Time.deltaTime * 20);
+        optionsCube.transform.Rotate(-Vector3.up * Time.deltaTime * 20);
+        sphereObject.transform.Rotate(-Vector3.up * Time.deltaTime * 20);
     }
 
     private void SetLevelButtons() {
@@ -81,6 +85,9 @@ public class Menu : MonoBehaviour {
 
         int texture = gameProgress.GetCubeTexture();
         cube.material.mainTexture = textures[texture];
+
+        int worldTexture = gameProgress.GetWorldTexture();
+        sphere.material.mainTexture = worldTextures[worldTexture];
     }
 
     private void SetResolutions() {
@@ -150,6 +157,22 @@ public class Menu : MonoBehaviour {
         if (texture > 0) {
             cube.material.mainTexture = textures[texture - 1];
             gameProgress.ChangeCubeTexture(texture - 1);
+        }
+    }
+
+    public void NextWorldTexture() {
+        int texture = gameProgress.GetWorldTexture();
+        if (texture < 2) {
+            sphere.material.mainTexture = worldTextures[texture + 1];
+            gameProgress.ChangeWorldTexture(texture + 1);
+        }
+    }
+
+    public void PreviousWorldTexture() {
+        int texture = gameProgress.GetWorldTexture();
+        if (texture > 0) {
+            sphere.material.mainTexture = worldTextures[texture - 1];
+            gameProgress.ChangeWorldTexture(texture - 1);
         }
     }
 }
