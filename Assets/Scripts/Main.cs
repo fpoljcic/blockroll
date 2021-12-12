@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -19,18 +20,17 @@ public class Main : MonoBehaviour {
     public CameraPosition cameraPosition;
     public TextMeshProUGUI levelText;
     public Block[] level;
-    // float scroll;
-    // int zoomSpeed = 20;
+    public AudioSource winSound;
+    public AudioSource loseSound;
+    public AudioSource moveVerticalSound;
+    public AudioSource moveHorizontalSound;
     bool isRendering = false;
     GameObject removedColliderBlock;
     int? prevFirstPointBlockIndex;
     int? prevSecondPointBlockIndex;
     List<Block> disappearedBlocks = new List<Block>();
 
-
     void Start() {
-        // scroll = Input.GetAxis("Mouse ScrollWheel");
-        // Camera.main.fieldOfView += scroll * zoomSpeed;
         renderLevel();
     }
 
@@ -208,14 +208,26 @@ public class Main : MonoBehaviour {
                     StartCoroutine(onLevelLose());
                     return;
                 }
-
+                playMovementSound();
                 break;
             }
+        }
+
+        if (firstPointOnBoard && !secondPointOnBoard || !firstPointOnBoard && secondPointOnBoard) {
+            playMovementSound();
         }
 
         if (!isOnBoard) {
             Vector3 push = determinePushDirection(firstPointOnBoard, secondPointOnBoard, firstPointBlock, secondPointBlock);
             StartCoroutine(onLevelLose(push));
+        }
+    }
+
+    private void playMovementSound() {
+        if (movement.cube.isHorizontal()) {
+            moveHorizontalSound.Play();
+        } else if (movement.cube.isVertical()) {
+            moveVerticalSound.Play();
         }
     }
 
@@ -240,7 +252,7 @@ public class Main : MonoBehaviour {
         }
         
         cube.GetComponent<Rigidbody>().useGravity = true;
-
+        loseSound.Play();
         yield return new WaitForSeconds(3f);
 
         resetLevel();
@@ -250,6 +262,7 @@ public class Main : MonoBehaviour {
     Vector3 determinePushDirection(bool firstPointOnBoard, bool secondPointOnBoard, Block firstPointBlock, Block secondPointBlock) {
         Block block = null;
         Vector3 pushDirection = Vector3.zero;
+
         if (movement.cube.isHorizontalY()) {
             if (!firstPointOnBoard && secondPointOnBoard) {
                 block = new Block(secondPointBlock.x, secondPointBlock.y + 2);
@@ -282,6 +295,7 @@ public class Main : MonoBehaviour {
     IEnumerator onLevelWin() {
         movement.isMoving = true;
         cube.GetComponent<Rigidbody>().useGravity = true;
+        winSound.Play();
         yield return new WaitForSeconds(3f);
         gameProgress.AdvanceLevel();
         renderLevel();
