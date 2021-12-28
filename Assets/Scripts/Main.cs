@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -24,6 +23,13 @@ public class Main : MonoBehaviour {
     public AudioSource loseSound;
     public AudioSource moveVerticalSound;
     public AudioSource moveHorizontalSound;
+    public AudioSource gameWinSound;
+    public AudioSource backgroundMusic;
+    public Stopwatch stopwatch;
+    public GameObject portalEffect;
+    public GameObject newLevelEffect;
+    public GameObject endGameEffect;
+    public GameObject congratulationsText;
     bool isRendering = false;
     GameObject removedColliderBlock;
     int? prevFirstPointBlockIndex;
@@ -32,11 +38,14 @@ public class Main : MonoBehaviour {
 
     void Start() {
         renderLevel();
+        stopwatch.StartStopwatch();
     }
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.R)) {
             gameProgress.ResetGame();
+            stopwatch.SetElapsedText("ELAPSED");
+            stopwatch.ResetStopwatch();
             renderLevel();
         } else if (Input.GetKeyDown(KeyCode.D)) {
             gameProgress.AdvanceLevel();
@@ -61,11 +70,13 @@ public class Main : MonoBehaviour {
             Destroy(obj);
         }
 
+        Vector3 startBlockPosition = Vector3.zero;
         foreach (Block block in level) {
             GameObject blockToRender;
 
             switch (block.type) {
                 case BlockType.START:
+                    startBlockPosition = new Vector3(block.x + 0.5f, 0.1f, block.y + 0.5f);
                     blockToRender = startBlock;
                     break;
                 case BlockType.STANDARD:
@@ -81,6 +92,7 @@ public class Main : MonoBehaviour {
                     blockToRender = disappieringBlock;
                     break;
                 case BlockType.END:
+                    portalEffect.transform.position = new Vector3(block.x + 0.5f, 0.05f, block.y + 0.5f);
                     blockToRender = endBlock;
                     break;
                 default:
@@ -106,6 +118,9 @@ public class Main : MonoBehaviour {
         }
 
         cameraPosition.UpdateCameraPosition(level, cameraOverride);
+
+        Destroy(newLevelEffect);
+        newLevelEffect = Instantiate(newLevelEffect, startBlockPosition, Quaternion.identity);
 
         isRendering = false;
     }
@@ -294,16 +309,37 @@ public class Main : MonoBehaviour {
 
     IEnumerator onLevelWin() {
         movement.isMoving = true;
+
+        if (gameProgress.GetLevel() == 15) {
+            congratulationsText.SetActive(true);
+            stopwatch.StopStopwatch();
+            backgroundMusic.Stop();
+            gameWinSound.Play();
+            stopwatch.SetElapsedText("COMPLETED");
+            StartCoroutine(MoveCamera());
+            endGameEffect.SetActive(true);
+        }
+
         cube.GetComponent<Rigidbody>().useGravity = true;
-        winSound.Play();
-        yield return new WaitForSeconds(3f);
-        gameProgress.AdvanceLevel();
-        renderLevel();
-        movement.isMoving = false;
+        
+        if (gameProgress.GetLevel() != 15) {
+            winSound.Play();
+            yield return new WaitForSeconds(3f);
+            gameProgress.AdvanceLevel();
+            renderLevel();
+            movement.isMoving = false;
+        }
     }
 
     public void exitClick() {
         Menu.fromLevel = true;
         SceneManager.LoadScene("Menu");
+    }
+
+    IEnumerator MoveCamera() {
+        while (Camera.main.transform.position.y <= 30) {
+            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y + Time.deltaTime * 1.5f, Camera.main.transform.position.z);
+            yield return null;
+        }
     }
 }

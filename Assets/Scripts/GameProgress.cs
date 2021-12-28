@@ -38,6 +38,9 @@ public class GameProgress : MonoBehaviour {
 
     public void ResetGame() {
         PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetInt("Level", 1);
+        PlayerPrefs.SetInt("LevelsUnlocked", 1);
+        PlayerPrefs.Save();
         Debug.Log("Data reset complete");
     }
 
@@ -77,13 +80,22 @@ public class GameProgress : MonoBehaviour {
         return PlayerPrefs.GetInt("QualityIndex", 3);
     }
 
-    public void SetVolume(float volume) {
-        PlayerPrefs.SetFloat("Volume", volume);
+    public void SetMusicVolume(float volume) {
+        PlayerPrefs.SetFloat("MusicVolume", volume);
         PlayerPrefs.Save();
     }
 
-    public float GetVolume() {
-        return PlayerPrefs.GetFloat("Volume", 0);
+    public float GetMusicVolume() {
+        return PlayerPrefs.GetFloat("MusicVolume", 0);
+    }
+
+    public void SetSoundVolume(float volume) {
+        PlayerPrefs.SetFloat("SoundVolume", volume);
+        PlayerPrefs.Save();
+    }
+
+    public float GetSoundVolume() {
+        return PlayerPrefs.GetFloat("SoundVolume", 0);
     }
 
     public void SetResolution(int width, int height) {

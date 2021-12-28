@@ -11,8 +11,11 @@ public class Menu : MonoBehaviour {
     public GameObject optionsCube;
     public GameObject sphereObject;
     public GameProgress gameProgress;
-    public AudioMixer audioMixer;
-    public Slider slider;
+    public AudioMixer musicAudioMixer;
+    public AudioMixer soundAudioMixer;
+    public AudioScript audioScript;
+    public Slider musicSlider;
+    public Slider soundSlider;
     public TMP_Dropdown GraphicsDropdown;
     public TMP_Dropdown ResolutionDropdown;
     public Toggle fullscreenToggle;
@@ -23,6 +26,10 @@ public class Menu : MonoBehaviour {
     public GameObject levelsMenu;
     public Renderer cube;
     public Renderer sphere;
+    public Button leftCubeTexture;
+    public Button rightCubeTexture;
+    public Button leftWorldTexture;
+    public Button rightWorldTexture;
 
     void Start() {
         if (fromLevel) {
@@ -64,9 +71,13 @@ public class Menu : MonoBehaviour {
     }
 
     private void SetDefaultValues() {
-        float volume = gameProgress.GetVolume();
-        audioMixer.SetFloat("volume", volume);
-        slider.value = volume;
+        float musicVolume = gameProgress.GetMusicVolume();
+        musicAudioMixer.SetFloat("music", musicVolume);
+        musicSlider.value = musicVolume;
+
+        float soundVolume = gameProgress.GetSoundVolume();
+        soundAudioMixer.SetFloat("sound", soundVolume);
+        soundSlider.value = soundVolume;
 
         int quality = gameProgress.GetQuality();
         QualitySettings.SetQualityLevel(quality);
@@ -86,8 +97,20 @@ public class Menu : MonoBehaviour {
         int texture = gameProgress.GetCubeTexture();
         cube.material.mainTexture = textures[texture];
 
+        if (texture == 0) {
+            leftCubeTexture.interactable = false;
+        } else if (texture == 3) {
+            rightCubeTexture.interactable = false;
+        }
+
         int worldTexture = gameProgress.GetWorldTexture();
         sphere.material.mainTexture = worldTextures[worldTexture];
+
+        if (worldTexture == 0) {
+            leftWorldTexture.interactable = false;
+        } else if (worldTexture == 2) {
+            rightWorldTexture.interactable = false;
+        }
     }
 
     private void SetResolutions() {
@@ -125,21 +148,39 @@ public class Menu : MonoBehaviour {
 
     public void SetResolution(int ResolutionIndex) {
         Resolution resolution = resolutions[ResolutionIndex];
+
+        if (!gameProgress.GetResolutionHeight().Equals(resolution.height) || !gameProgress.GetResolutionWidth().Equals(resolution.width)) {
+            audioScript.playButtonClickSound();
+        }
+
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
         gameProgress.SetResolution(resolution.width, resolution.height);
     }
 
-    public void SetVolume(float volume) {
-        audioMixer.SetFloat("volume", volume);
-        gameProgress.SetVolume(volume);
+    public void SetMusicVolume(float volume) {
+        musicAudioMixer.SetFloat("music", volume);
+        gameProgress.SetMusicVolume(volume);
+    }
+
+    public void SetSoundVolume(float volume) {
+        soundAudioMixer.SetFloat("sound", volume);
+        gameProgress.SetSoundVolume(volume);
     }
 
     public void SetQuality(int qualityIndex) {
+        if (!gameProgress.GetQuality().Equals(qualityIndex)) {
+            audioScript.playButtonClickSound();
+        }
+
         QualitySettings.SetQualityLevel(qualityIndex);
         gameProgress.SetQuality(qualityIndex);
     }
 
     public void SetFullscreen(bool isFullscreen) {
+        if (!gameProgress.GetFullscreen().Equals(isFullscreen.ToString())) {
+            audioScript.playButtonClickSound();
+        }
+
         Screen.fullScreen = isFullscreen;
         gameProgress.SetFullscreen(isFullscreen.ToString());
     }
@@ -149,6 +190,13 @@ public class Menu : MonoBehaviour {
         if (texture < 3) {
             cube.material.mainTexture = textures[texture + 1];
             gameProgress.ChangeCubeTexture(texture + 1);
+
+            leftCubeTexture.interactable = true;
+            if (texture + 1 == 3) {
+                rightCubeTexture.interactable = false;
+            } else {
+                rightCubeTexture.interactable = true;
+            }
         }
     }
 
@@ -157,6 +205,13 @@ public class Menu : MonoBehaviour {
         if (texture > 0) {
             cube.material.mainTexture = textures[texture - 1];
             gameProgress.ChangeCubeTexture(texture - 1);
+
+            rightCubeTexture.interactable = true;
+            if (texture - 1 == 0) {
+                leftCubeTexture.interactable = false;
+            } else {
+                leftCubeTexture.interactable = true;
+            }
         }
     }
 
@@ -165,6 +220,13 @@ public class Menu : MonoBehaviour {
         if (texture < 2) {
             sphere.material.mainTexture = worldTextures[texture + 1];
             gameProgress.ChangeWorldTexture(texture + 1);
+
+            leftWorldTexture.interactable = true;
+            if (texture + 1 == 2) {
+                rightWorldTexture.interactable = false;
+            } else {
+                rightWorldTexture.interactable = true;
+            }
         }
     }
 
@@ -173,6 +235,13 @@ public class Menu : MonoBehaviour {
         if (texture > 0) {
             sphere.material.mainTexture = worldTextures[texture - 1];
             gameProgress.ChangeWorldTexture(texture - 1);
+
+            rightWorldTexture.interactable = true;
+            if (texture - 1 == 0) {
+                leftWorldTexture.interactable = false;
+            } else {
+                leftWorldTexture.interactable = true;
+            }
         }
     }
 }

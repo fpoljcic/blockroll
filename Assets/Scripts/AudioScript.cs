@@ -7,6 +7,4 @@ public class AudioScript : MonoBehaviour {
     public void playButtonClickSound() {
         buttonClickSound.Play();
     }
-
-
 }
