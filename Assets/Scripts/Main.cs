@@ -30,7 +30,6 @@ public class Main : MonoBehaviour {
     public GameObject newLevelEffect;
     public GameObject endGameEffect;
     public GameObject congratulationsText;
-    bool isRendering = false;
     GameObject removedColliderBlock;
     int? prevFirstPointBlockIndex;
     int? prevSecondPointBlockIndex;
@@ -47,24 +46,24 @@ public class Main : MonoBehaviour {
             stopwatch.SetElapsedText("ELAPSED");
             stopwatch.ResetStopwatch();
             renderLevel();
-        } else if (Input.GetKeyDown(KeyCode.D)) {
+        } else if (!movement.isMoving && Input.GetKeyDown(KeyCode.L)) {
             gameProgress.AdvanceLevel();
             renderLevel();
-        } else if (Input.GetKeyDown(KeyCode.A)) {
+        } else if (!movement.isMoving && Input.GetKeyDown(KeyCode.J)) {
             gameProgress.PreviousLevel();
             renderLevel();
         }
     }
 
     void renderLevel() {
-        isRendering = true;
-
         prevFirstPointBlockIndex = null;
         prevSecondPointBlockIndex = null;
 
-        level = allLevels.levels[gameProgress.GetLevel() - 1];
+        if (level != null) {
+            resetLevel(level);
+        }
 
-        resetLevel();
+        level = allLevels.levels[gameProgress.GetLevel() - 1];
 
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Board")) {
             Destroy(obj);
@@ -120,32 +119,29 @@ public class Main : MonoBehaviour {
         cameraPosition.UpdateCameraPosition(level, cameraOverride);
 
         Destroy(newLevelEffect);
-        newLevelEffect = Instantiate(newLevelEffect, startBlockPosition, Quaternion.identity);
 
-        isRendering = false;
+        newLevelEffect = Instantiate(newLevelEffect, startBlockPosition, Quaternion.identity);
     }
 
     void resetCubePosition() {
         movement.resetCube();
         cube.GetComponent<Rigidbody>().useGravity = false;
         cube.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        cube.transform.rotation = Quaternion.identity;
-        cube.transform.position = new Vector3(0.5f, 1, 0.5f);
+        cube.transform.SetPositionAndRotation(new Vector3(0.5f, 1, 0.5f), Quaternion.identity);
     }
 
-    void resetRemovedCubes() {
+    void resetRemovedCubes(Block[] level) {
         int j = 0;
 
         for (int i = 0; i < level.Length; i++) {
             if (level[i] == null) {
                 Block block = disappearedBlocks[j++];
                 level[i] = block;
-                
+
                 GameObject blockGameObject = GameObject.Find(block.getName());
                 blockGameObject.GetComponent<Rigidbody>().useGravity = false;
                 blockGameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                blockGameObject.transform.rotation = Quaternion.identity;
-                blockGameObject.transform.position = new Vector3(block.x + 0.5f, -0.05f, block.y + 0.5f);
+                blockGameObject.transform.SetPositionAndRotation(new Vector3(block.x + 0.5f, -0.05f, block.y + 0.5f), Quaternion.identity);
             }
         }
 
@@ -154,14 +150,14 @@ public class Main : MonoBehaviour {
         disappearedBlocks.Clear();
     }
 
-    public void resetLevel() {
+    public void resetLevel(Block[] level) {
         if (removedColliderBlock != null) {
             removedColliderBlock.GetComponent<BoxCollider>().enabled = true;
             removedColliderBlock = null;
         }
 
         resetCubePosition();
-        resetRemovedCubes();
+        resetRemovedCubes(level);
     }
 
     public void checkCubePositionOnBoard() {
@@ -265,12 +261,12 @@ public class Main : MonoBehaviour {
                 yield return new WaitForSeconds(0.01f);
             }
         }
-        
+
         cube.GetComponent<Rigidbody>().useGravity = true;
         loseSound.Play();
         yield return new WaitForSeconds(3f);
 
-        resetLevel();
+        resetLevel(level);
         movement.isMoving = false;
     }
 
@@ -311,6 +307,7 @@ public class Main : MonoBehaviour {
         movement.isMoving = true;
 
         if (gameProgress.GetLevel() == 15) {
+            cameraPosition.LockCamera();
             congratulationsText.SetActive(true);
             stopwatch.StopStopwatch();
             backgroundMusic.Stop();
@@ -321,7 +318,7 @@ public class Main : MonoBehaviour {
         }
 
         cube.GetComponent<Rigidbody>().useGravity = true;
-        
+
         if (gameProgress.GetLevel() != 15) {
             winSound.Play();
             yield return new WaitForSeconds(3f);

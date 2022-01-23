@@ -999,7 +999,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400008, guid: ab8125ffea4d43e4aa9439d5f8fff4c4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 400008, guid: ab8125ffea4d43e4aa9439d5f8fff4c4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1007,7 +1007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400008, guid: ab8125ffea4d43e4aa9439d5f8fff4c4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.44639403
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 400008, guid: ab8125ffea4d43e4aa9439d5f8fff4c4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3545,6 +3545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   main: {fileID: 1759660660}
+  cameraPosition: {fileID: 963194230}
   speed: 300
   isMoving: 0
 --- !u!65 &1839313768

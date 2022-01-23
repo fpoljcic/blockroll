@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour {
     public Main main;
+    public CameraPosition cameraPosition;
     public Cube cube = new Cube(Vector2.zero, Vector2.zero, Vector3.zero, Orientation.VERTICAL);
     public int speed = 300;
     public bool isMoving = false;
@@ -13,13 +14,13 @@ public class Movement : MonoBehaviour {
         }
 
         if (Input.GetKey(KeyCode.RightArrow)) {
-            StartCoroutine(Roll(Vector3.right));
-        } else if (Input.GetKey(KeyCode.LeftArrow)) {
-            StartCoroutine(Roll(Vector3.left));
-        } else if (Input.GetKey(KeyCode.UpArrow)) {
-            StartCoroutine(Roll(Vector3.forward));
+            StartCoroutine(Roll(cameraPosition.GetDirection(0)));
         } else if (Input.GetKey(KeyCode.DownArrow)) {
-            StartCoroutine(Roll(Vector3.back));
+            StartCoroutine(Roll(cameraPosition.GetDirection(1)));
+        } else if (Input.GetKey(KeyCode.LeftArrow)) {
+            StartCoroutine(Roll(cameraPosition.GetDirection(2)));
+        } else if (Input.GetKey(KeyCode.UpArrow)) {
+            StartCoroutine(Roll(cameraPosition.GetDirection(3)));
         }
     }
 
