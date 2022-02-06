@@ -41,16 +41,18 @@ public class Main : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            gameProgress.ResetGame();
-            stopwatch.SetElapsedText("ELAPSED");
-            stopwatch.ResetStopwatch();
+        if (!movement.isMoving && Input.GetKeyDown(KeyCode.R)) {
             renderLevel();
         } else if (!movement.isMoving && Input.GetKeyDown(KeyCode.L)) {
             gameProgress.AdvanceLevel();
             renderLevel();
         } else if (!movement.isMoving && Input.GetKeyDown(KeyCode.J)) {
             gameProgress.PreviousLevel();
+            renderLevel();
+        } else if (Input.GetKeyDown(KeyCode.X)) {
+            gameProgress.ResetGame();
+            stopwatch.SetElapsedText("ELAPSED");
+            stopwatch.ResetStopwatch();
             renderLevel();
         }
     }

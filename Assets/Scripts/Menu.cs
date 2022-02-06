@@ -30,6 +30,7 @@ public class Menu : MonoBehaviour {
     public Button rightCubeTexture;
     public Button leftWorldTexture;
     public Button rightWorldTexture;
+    public GameObject tutorialImage;
 
     void Start() {
         if (fromLevel) {
@@ -54,6 +55,10 @@ public class Menu : MonoBehaviour {
     }
 
     void Update() {
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return)) && tutorialImage.activeSelf) {
+            PlayGame(1);
+        }
+
         optionsCube.transform.Rotate(-Vector3.up * Time.deltaTime * 20);
         sphereObject.transform.Rotate(-Vector3.up * Time.deltaTime * 20);
     }
@@ -137,8 +142,12 @@ public class Menu : MonoBehaviour {
     }
 
     public void PlayGame(int level) {
-        gameProgress.SetLevel(level);
-        SceneManager.LoadScene("MainScene");
+        if (level == 1 && !tutorialImage.activeSelf) {
+            tutorialImage.SetActive(true);
+        } else {
+            gameProgress.SetLevel(level);
+            SceneManager.LoadScene("MainScene");
+        }
     }
 
     public void ExitGame() {
