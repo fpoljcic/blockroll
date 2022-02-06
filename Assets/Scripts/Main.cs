@@ -152,6 +152,12 @@ public class Main : MonoBehaviour {
         disappearedBlocks.Clear();
     }
 
+    public void resetLevel() {
+        if (!movement.isMoving) {
+            resetLevel(level);
+        }
+    }
+
     public void resetLevel(Block[] level) {
         if (removedColliderBlock != null) {
             removedColliderBlock.GetComponent<BoxCollider>().enabled = true;
