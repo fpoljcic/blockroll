@@ -49,7 +49,7 @@ public class Main : MonoBehaviour {
         } else if (!movement.isMoving && Input.GetKeyDown(KeyCode.J)) {
             gameProgress.PreviousLevel();
             renderLevel();
-        } else if (Input.GetKeyDown(KeyCode.X)) {
+        } else if (Input.GetKeyDown(KeyCode.X) && !congratulationsText.activeSelf) {
             gameProgress.ResetGame();
             stopwatch.SetElapsedText("ELAPSED");
             stopwatch.ResetStopwatch();
